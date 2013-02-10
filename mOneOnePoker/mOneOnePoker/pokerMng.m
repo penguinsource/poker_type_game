@@ -9,10 +9,10 @@
 // This modified Objective-C version.. by Mihai Oprescu
 // mihaioprescu5@yahoo.com
 
-#import "pokerlib.h"
+#import "pokerMng.h"
 
 
-@implementation pokerlib
+@implementation pokerMng
 
 @synthesize deck;
 
@@ -131,7 +131,7 @@ double  drand48();
         }
     }
 }
-
+/*
 //
 //  This routine takes a deck and randomly mixes up
 //  the order of the cards.
@@ -151,7 +151,7 @@ double  drand48();
         temp[n] = 0;
     }
 }
-
+*/
 -(void) print_hand: (NSInteger*) hand :(NSInteger) n {
     NSInteger i, r;
     char suit;
@@ -284,6 +284,13 @@ double  drand48();
     }
     NSLog(@"Suit type: %@", suitType);
     return suitType;
+}
+
+-(NSMutableArray*) getDeck {
+    NSMutableArray* deckArray = [NSMutableArray array];
+    for (NSInteger i = 0; i < 52; i++)
+        [deckArray addObject:[NSNumber numberWithInt:deck[i]]];
+    return deckArray;
 }
 
 // init
