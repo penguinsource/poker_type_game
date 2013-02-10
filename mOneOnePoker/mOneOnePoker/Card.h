@@ -15,7 +15,7 @@
     NSInteger cardLine;
 }
 
-@property (readwrite) int value;
+@property (readwrite) NSInteger value;
 @property (readwrite) CGPoint position;
 @property (readwrite) NSInteger cardLine;
 

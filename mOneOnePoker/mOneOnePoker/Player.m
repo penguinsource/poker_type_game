@@ -23,6 +23,8 @@
         [[lineup objectAtIndex:d] release];                                          // (2)
     }
     
+    // releasing the 'resultLineup' array
+    [resultLineup release];
     // releasing player 'lineup' array
     [lineup release];
     [deck release];
@@ -74,6 +76,10 @@
     return cardDrawn;
 }
 
+/*-(NSString) parseCurrentLineup {
+    
+}*/
+
 -(void) printDeck {
     for (NSInteger i = 0; i < [deck count]; i++){
         Card* card = [deck objectAtIndex:i];
@@ -85,6 +91,7 @@
     if (self = [super init]){
         deck = [[NSMutableArray alloc] initWithCapacity:20];
         lineup = [[NSMutableArray alloc] initWithCapacity:5];
+        resultLineup = [[NSMutableArray alloc] initWithCapacity:5];
         currLevel = 1;
         for (NSInteger n = 0; n < 5; n++){
             NSMutableArray *line = [[NSMutableArray alloc] initWithCapacity:5];

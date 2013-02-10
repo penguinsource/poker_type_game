@@ -16,6 +16,7 @@
         CGSize winSize = [[CCDirector sharedDirector] winSize];
         CCSprite *bg = [CCSprite spriteWithFile:@"bg1smaller.png"];
         [bg setPosition:ccp(winSize.width/2, winSize.height/2)];
+        //NSLog(@"YOOO: %f, %f", [bg contentSize].width, [bg contentSize].height);
         [self addChild:bg z:1];
     }
     return self;

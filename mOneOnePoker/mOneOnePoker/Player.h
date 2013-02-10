@@ -9,8 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "Card.h"
 
+/*
+ resultLineup -> hand pairs results
+ */
+
 @interface Player : NSObject {
     NSMutableArray *lineup;         // lineup = the cards the player knows about / on table
+    NSMutableArray *resultLineup;
     NSMutableArray *deck;
     NSInteger currLevel;         // lowest line count of all lines
 }

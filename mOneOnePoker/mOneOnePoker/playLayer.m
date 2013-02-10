@@ -7,6 +7,7 @@
 //
 
 #import "playLayer.h"
+//#import "poker.h"
 
 @implementation playLayer
 
@@ -21,7 +22,9 @@ Card* cardDrawn;
     for (NSInteger c = 0; c < [cardDeck count]; c++){
         [[cardDeck objectAtIndex:c] release];
     }
-    [cardDeck release];    
+    [cardDeck release];
+    
+    //[pokerManager release];
     
     [super dealloc];
 }
@@ -134,6 +137,7 @@ Card* cardDrawn;
 
 - (void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    
 	//NSLog(@"Touches began!");
     NSArray *touchArray = [touches allObjects];
     UITouch *one = [touchArray objectAtIndex:0];
@@ -153,6 +157,7 @@ Card* cardDrawn;
             // check if there are any cards left to be drawn in the deck
             if ([pOne isDeckEmpty]){
                 gameState = @"deckOneEmpty";
+                NSLog(@"Empty Deck One");
             }else{
                 // if there are.. draw a card
                 [self drawACardPlayer:pOne withDeck: drawDeckOne andState:@"oneSelecting"];
@@ -164,6 +169,7 @@ Card* cardDrawn;
             // check if there are any cards left to be drawn in the deck
             if ([pTwo isDeckEmpty]){
                 gameState = @"deckTwoEmpty";
+                NSLog(@"Empty Deck Two");
             }else{
                 // if there are.. draw a card
                 [self drawACardPlayer:pTwo withDeck: drawDeckTwo andState:@"twoSelecting"];
@@ -216,9 +222,10 @@ Card* cardDrawn;
         }
         // if the user clicks somewhere else on the screen.. ignore it..
     } else if (gameState == @"deckOneEmpty"){
+        NSLog(@"Empty Deck One");
         
     } else if (gameState == @"deckTwoEmpty"){
-        
+        NSLog(@"Empty Deck Two");
     }
 
 }
@@ -258,13 +265,13 @@ Card* cardDrawn;
         if (currLevel == [[pLineup objectAtIndex:i] count]) {
             int lineCount = [[pLineup objectAtIndex:i] count];
             Card *cardEx = [[pLineup objectAtIndex:i] objectAtIndex:(lineCount-1)];
-            //NSLog(@"number %d", [[pLineup objectAtIndex:i] count]);
-            CGPoint highlightPosition = CGPointMake([cardEx position].x + 4.0f, [cardEx position].y + 16.0f);
+            //NSLog(@"number %d", [cardEx position]);
+            CGPoint highlightPosition = CGPointMake([cardEx position].x + 4.0f, [cardEx position].y - 16.0f);
             
-            CCSprite *highlightSprite = [CCSprite spriteWithSpriteFrameName:@"drawCardPeng.png"];
-            
+            CCSprite *highlightSprite = [CCSprite spriteWithFile:@"greenCard.png"];
+            [highlightSprite setOpacity:180];
             [highlightSprite setPosition:highlightPosition];
-            [highlightSprite setScale:someScale];
+            [highlightSprite setScale:0.3f];
             
             // save the card line which the sprite is on as the tag of the sprite
             // (just a workaround to save having to create other variables)
@@ -310,10 +317,13 @@ Card* cardDrawn;
                                              [cardCurr value],
                                              [[cardCurr suit] characterAtIndex:0]];
             
-            CCSprite *exSprite = [CCSprite spriteWithSpriteFrameName:cardFileName];
+            //CCSprite *exSprite = [CCSprite spriteWithSpriteFrameName:cardFileName];
+            CCSprite *exSprite = [CCSprite spriteWithFile:@"Grad1.png"];
+            NSLog(@"WIDTH is: %f, %f", winSize.width, winSize.height);
+            NSLog(@"bounding box is: %f, %f", [exSprite boundingBox].size.width, [exSprite boundingBox].size.height);
             //[allSprites addObject:exSprite];
             [exSprite setPosition:ccp(tempX,tempY)];
-            [exSprite setScale:someScale];
+            	//[exSprite setScale:someScale];
             [self addChild:exSprite z:150];
             
             // save the position and line where the card / card's sprite is displayed.
@@ -355,6 +365,10 @@ Card* cardDrawn;
             [exSprite setPosition:ccp(tempX,tempY)];
             [exSprite setScale:someScale];
             [self addChild:exSprite z:150];
+            
+            // save the position and line where the card / card's sprite is displayed.
+            [cardCurr setPosition:ccp(tempX,tempY)];
+            [cardCurr setCardLine:n];
         }
     }
     
@@ -370,7 +384,6 @@ Card* cardDrawn;
     [two setPosition:ccp(tempX + 60, 65)];
     [self addChild:two z:150];
     
-
     // other display ------------------------------------------------------------------
 }
 
@@ -379,6 +392,8 @@ Card* cardDrawn;
 -(void) update:(ccTime) deltaTime {
 
 }
+
+
 
 -(id) init {
     if (self = [super init]){
@@ -404,6 +419,13 @@ Card* cardDrawn;
         [self setIsTouchEnabled:TRUE];      // make layer touch enabled
         
         [self scheduleUpdate];              // schedule update
+        
+        pokerManager = [[pokerlib alloc] init];
+        [pokerManager init_deck];
+        //NSInteger* theDeck = [pokerManager deck];
+        
+        //NSInteger* pokerDeck = [pokerManager deck];
+        //NSLog(@"!!! value: %d", pokerDeck[0]);
         
         //counter = 0;
         //[self initObjects];
