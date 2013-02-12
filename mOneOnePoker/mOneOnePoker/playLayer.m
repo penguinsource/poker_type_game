@@ -428,7 +428,7 @@ Card* cardDrawn;
         //NSLog(@"!!! value: %d", pokerDeck[0]);
         //counter = 0;
         //[self initObjects];
-        //
+        
     }
     return self;
 }
