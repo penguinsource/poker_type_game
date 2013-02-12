@@ -33,7 +33,7 @@
 }
 
 // add card 'card_a' to line 'line_a'
--(void) addCard: (NSNumber*) card_a toLine: (NSInteger) line_a {
+-(void) addCard: (Card*) card_a toLine: (NSInteger) line_a {
     // add assert here that line is < 6 and > 0
     [[lineup objectAtIndex:line_a] addObject:card_a];
     
@@ -77,8 +77,8 @@
 }
 
 /*-(NSString) parseCurrentLineup {
- 
- }*/
+    
+}*/
 
 -(void) printDeck {
     for (NSInteger i = 0; i < [deck count]; i++){
@@ -105,15 +105,15 @@
 // just for test purposes
 -(void) testFunc {
     /*
-     Card* v = [[lineup objectAtIndex:0] objectAtIndex:0];
-     Card* two = [[Card alloc] init];
-     [two setValue:15];
-     
-     [[lineup objectAtIndex:0] addObject:two];
-     Card* check = [[lineup objectAtIndex:0] objectAtIndex:1];
-     
-     NSLog(@"test function: %d", [v value]);
-     NSLog(@"test function: %d", [check value]);
+    Card* v = [[lineup objectAtIndex:0] objectAtIndex:0];
+    Card* two = [[Card alloc] init];
+    [two setValue:15];
+    
+    [[lineup objectAtIndex:0] addObject:two];
+    Card* check = [[lineup objectAtIndex:0] objectAtIndex:1];
+    
+    NSLog(@"test function: %d", [v value]);
+    NSLog(@"test function: %d", [check value]);
      */
     NSLog(@"deck count is %d", [deck count]);
 }

@@ -11,7 +11,7 @@
 #import "arrays.h"
 #import "poker.h"
 
-@interface pokerMng : NSObject {
+@interface pokerlib : NSObject {
     NSInteger* deck;
 }
 

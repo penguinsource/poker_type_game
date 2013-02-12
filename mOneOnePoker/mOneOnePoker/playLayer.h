@@ -10,7 +10,7 @@
 #import "cocos2d.h"
 #import "Card.h"
 #import "Player.h"
-#import "pokerMng.h"
+#import "pokerlib.h"
 
 /*
  
@@ -33,7 +33,7 @@
     
     NSMutableArray *highlightSprites;
     
-    pokerMng *pokerManager;
+    pokerlib *pokerManager;
 }
 
 @end
