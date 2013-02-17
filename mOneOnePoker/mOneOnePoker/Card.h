@@ -11,11 +11,13 @@
 @interface Card : NSObject {
     NSString *suit;
     NSInteger value;
+    NSInteger codedValue;
     CGPoint position;
     NSInteger cardLine;
 }
 
 @property (readwrite) NSInteger value;
+@property (readwrite) NSInteger codedValue;
 @property (readwrite) CGPoint position;
 @property (readwrite) NSInteger cardLine;
 

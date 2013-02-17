@@ -23,6 +23,13 @@ double  drand48();
     
     //[deck release];
     free(deck);
+    
+    // release all cards and the 'CardObjDeck' array
+    for (NSInteger i = 0; i < 52; i++){
+        [[CardObjDeck objectAtIndex:i] release];
+    }
+    [CardObjDeck release];
+    
     [super dealloc];
 }
 
@@ -74,12 +81,12 @@ double  drand48();
     NSInteger suit = 0x8000;
     //NSInteger suit = 2048;
     //NSInteger primes[] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41 };
-    NSLog(@"BLAH: %d ", suit);
+    //NSLog(@"BLAH: %d ", suit);
     for ( i = 0; i < 4; i++, suit >>= 1 ){
         for ( j = 0; j < 13; j++, n++ ) {
             deck[n] = primes[j] | (j << 8) | suit | (1 << (16+j));
             //NSLog(@"card: %d, %d, SUIT: %d, primes: %d, %d", i, deck[n], suit, primes[j], j);
-            NSLog(@"index %d, %d, %d, %d, %d", n, primes[j], j, suit, deck[n]);
+            //NSLog(@"index %d, %d, %d, %d, %d", n, primes[j], j, suit, deck[n]);
         }
     }
     
@@ -91,8 +98,12 @@ double  drand48();
     }
     short ii = [self eval_5hand:hand];
     NSInteger jj = [self hand_rank:ii];
-    NSLog(@"ii is %hd, jj is %d", ii, jj);
+    //NSLog(@"ii is %hd, jj is %d", ii, jj);
     [self print_hand:hand :5];
+    
+    // initiate the 'CardObjDeck' (the array with each card being a Card object)
+    // [self init_deck_CardObjects];
+    
     //[self cardValue: deck[0]];
     //[self getCardSuit:deck[0]];
     //[self getCardSuit:deck[12]];
@@ -169,7 +180,7 @@ double  drand48();
         else
             suit = 's';
         
-        printf( "BAAAAAA: %c%c \n", rank[r], suit );
+        //printf( "BAAAAAA: %c%c \n", rank[r], suit );
         hand++;
     }
 }
@@ -260,7 +271,7 @@ double  drand48();
         cardValue = 1;
     }
     
-    NSLog(@"Card Value: %d", diff);
+    //NSLog(@"Card Value: %d", diff);
     
     // add assert that cardValue is not -1.
     return cardValue;
@@ -282,8 +293,36 @@ double  drand48();
     } else if (diff == 1){
         suitType = @"spades";
     }
-    NSLog(@"Suit type: %@", suitType);
+    //NSLog(@"Suit type: %@", suitType);
     return suitType;
+}
+
+-(NSMutableArray*) getObjDeck {
+    CardObjDeck = [[NSMutableArray alloc] initWithCapacity:52];
+    for (NSInteger i = 0; i < 52; i++){
+        // [deckArray addObject:[NSNumber numberWithInt:deck[i]]];   // adds an NSNumber to the deckArray
+        NSInteger ccardValue = [self getCardValue:deck[i]];
+        NSString* ccardSuit = [self getCardSuit:deck[i]];
+        NSInteger suitToSet = -1;
+        if ([ccardSuit characterAtIndex:0] == 's') {
+            suitToSet = 0;
+        } else if ([ccardSuit characterAtIndex:0] == 'h'){
+            suitToSet = 1;
+        } else if ([ccardSuit characterAtIndex:0] == 'd'){
+            suitToSet = 2;
+        } else if ([ccardSuit characterAtIndex:0] == 'c'){
+            suitToSet = 3;
+        } else {
+            suitToSet = 5;
+        }
+        
+        Card *newcard = [[Card alloc] init];
+        [newcard setSuit:suitToSet];
+        [newcard setCodedValue:deck[i]];
+        [newcard setValue:ccardValue];
+        [CardObjDeck addObject:newcard];
+    }
+    return CardObjDeck;
 }
 
 // init

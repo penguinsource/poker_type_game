@@ -1,9 +1,5 @@
-//
-//  arrays.h
-//  mOneOnePoker
-//
 //  Created by Mihai on 2013-02-09.
-//  Copyright 2013 __MyCompanyName__. All rights reserved.
+//  Copyright 2013 mihaioprescu5@yahoo.com. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

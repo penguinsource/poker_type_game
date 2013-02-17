@@ -19,6 +19,7 @@
 		8995C97216C716E700F359BD /* arrays.m in Sources */ = {isa = PBXBuildFile; fileRef = 8995C97116C716E700F359BD /* arrays.m */; };
 		8995E18216C5EF1800834ADC /* pokerlib.m in Sources */ = {isa = PBXBuildFile; fileRef = 8995E18116C5EF1800834ADC /* pokerlib.m */; };
 		8996A29616C4E740003D3796 /* fast_eval.c in Sources */ = {isa = PBXBuildFile; fileRef = 8996A29516C4E740003D3796 /* fast_eval.c */; };
+		8996E59516D1610800D07348 /* playLayerTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = 8996E59416D1610800D07348 /* playLayerTouch.m */; };
 		8997AC2616AC788B0042DC2A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8997AC2516AC788B0042DC2A /* QuartzCore.framework */; };
 		8997AC2816AC788B0042DC2A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8997AC2716AC788B0042DC2A /* OpenGLES.framework */; };
 		8997AC2A16AC788B0042DC2A /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8997AC2916AC788B0042DC2A /* OpenAL.framework */; };
@@ -177,6 +178,8 @@
 		8996A29316C4E3A6003D3796 /* poker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = poker.h; sourceTree = "<group>"; };
 		8996A29416C4E3A6003D3796 /* pokerlib.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pokerlib.c; sourceTree = "<group>"; };
 		8996A29516C4E740003D3796 /* fast_eval.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fast_eval.c; sourceTree = "<group>"; };
+		8996E59316D1610800D07348 /* playLayerTouch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = playLayerTouch.h; sourceTree = "<group>"; };
+		8996E59416D1610800D07348 /* playLayerTouch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = playLayerTouch.m; sourceTree = "<group>"; };
 		8997AC2116AC788B0042DC2A /* mOneOnePoker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mOneOnePoker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8997AC2516AC788B0042DC2A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		8997AC2716AC788B0042DC2A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -477,28 +480,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8996A28F16C4E391003D3796 /* Hand_Evaluator */ = {
+		898DDFAE16D02A6E00A583BB /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				8996A29716C4E798003D3796 /* obj c */,
 				8996A29116C4E3A6003D3796 /* allfive.c */,
 				8996A29216C4E3A6003D3796 /* arrayss.h */,
-				8996A29316C4E3A6003D3796 /* poker.h */,
 				8996A29416C4E3A6003D3796 /* pokerlib.c */,
 				8996A29516C4E740003D3796 /* fast_eval.c */,
 			);
-			name = Hand_Evaluator;
+			name = Other;
 			sourceTree = "<group>";
 		};
-		8996A29716C4E798003D3796 /* obj c */ = {
+		898DDFB016D02AA700A583BB /* pokerEval */ = {
 			isa = PBXGroup;
 			children = (
-				8995C97016C716E700F359BD /* arrays.h */,
-				8995C97116C716E700F359BD /* arrays.m */,
 				8995E18016C5EF1800834ADC /* pokerlib.h */,
 				8995E18116C5EF1800834ADC /* pokerlib.m */,
+				8995C97016C716E700F359BD /* arrays.h */,
+				8995C97116C716E700F359BD /* arrays.m */,
+				8996A29316C4E3A6003D3796 /* poker.h */,
 			);
-			name = "obj c";
+			name = pokerEval;
 			sourceTree = "<group>";
 		};
 		8997AC1616AC788B0042DC2A = {
@@ -933,6 +935,8 @@
 				8997ADC716AC81B40042DC2A /* playLayer.m */,
 				89CA60A816AF7ACB0004B648 /* backgroundLayer.h */,
 				89CA60A916AF7ACB0004B648 /* backgroundLayer.m */,
+				8996E59316D1610800D07348 /* playLayerTouch.h */,
+				8996E59416D1610800D07348 /* playLayerTouch.m */,
 			);
 			name = SceneOne;
 			sourceTree = "<group>";
@@ -959,7 +963,8 @@
 		89DAFE1B16AC8C6E00053F78 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				8996A28F16C4E391003D3796 /* Hand_Evaluator */,
+				898DDFAE16D02A6E00A583BB /* Other */,
+				898DDFB016D02AA700A583BB /* pokerEval */,
 				8997ADC116AC7D150042DC2A /* Scenes */,
 				89DAFE1D16AC8CA500053F78 /* Card.h */,
 				89DAFE1E16AC8CA500053F78 /* Card.m */,
@@ -1187,6 +1192,7 @@
 				8996A29616C4E740003D3796 /* fast_eval.c in Sources */,
 				8995E18216C5EF1800834ADC /* pokerlib.m in Sources */,
 				8995C97216C716E700F359BD /* arrays.m in Sources */,
+				8996E59516D1610800D07348 /* playLayerTouch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

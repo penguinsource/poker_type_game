@@ -11,6 +11,8 @@
 @implementation Card
 
 @synthesize value;
+@synthesize codedValue;
+
 @synthesize position;
 @synthesize cardLine;
 

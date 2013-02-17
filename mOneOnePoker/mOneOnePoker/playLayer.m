@@ -18,115 +18,16 @@ Card* cardDrawn;
     // release player objects
     [pOne release];
     [pTwo release];
+    
     // releasing card deck array
     for (NSInteger c = 0; c < [cardDeck count]; c++){
         [[cardDeck objectAtIndex:c] release];
     }
     [cardDeck release];
     
-    //[pokerManager release];
+    [pokerManager release];
     
     [super dealloc];
-}
-
--(void) initDeck {
-    
-    // initiate the deck of cards
-    cardDeck = [[NSMutableArray alloc] initWithCapacity:40];
-    for (NSInteger suit = 0; suit < 4; suit++){
-        for (NSInteger val = 1; val < 14; val++){
-            //Card *newcard = [Card initWithSuit: 0 andValue: 0];
-            //NSLog(@"value is %d", [newcard ]);
-            Card *newcard = [[Card alloc] init];
-            [newcard setSuit:suit];
-            [newcard setValue:val];
-            [cardDeck addObject:newcard];
-        }
-    }
-    
-    // create player instances
-    pOne = [[Player alloc] init];
-    pTwo = [[Player alloc] init];
-    
-    //[self printDeck];
-    
-    [self shuffleDeck:cardDeck];
-    [self splitDeck:cardDeck];
-
-    [self removeAllChildrenWithCleanup:YES];
-    [self updateDisplay];
-    //for (NSInteger n = 0; n < [allSprites count]; n++){
-        
-    //}
-    
-    //[self printDeck];
-    
-}
-
--(void) splitDeck: (NSMutableArray*) anArray {
-    
-    // keeps track of which line to add cards to
-    // there are 5 lines per lineup (one lineup per player)
-    NSInteger lineIndex = 0;
-    
-    // add the first 5 'cards' of the deck to player 1's (pOne) lineup
-    for (NSInteger n = 0; n < 5; n++){
-        [pOne addCard:[cardDeck objectAtIndex:n] toLine:lineIndex];
-        lineIndex++;
-    }
-
-    lineIndex = 0;
-    // add the next 5 'cards' of the deck to player 2's (pTwo) lineup
-    for (NSInteger n = 5; n < 10; n++){
-        [pTwo addCard:[cardDeck objectAtIndex:n] toLine:lineIndex];
-        lineIndex++;
-    }
-    
-    // add the next 20 'cards' of the deck to player 1's deck
-    for (NSInteger n = 10; n < 30; n++){
-        [pOne addCardtoDeck:[cardDeck objectAtIndex:n]];
-    }
-    
-    // add the next 20 'cards' of the deck to player 2's deck
-    for (NSInteger n = 30; n < 50; n++){
-        [pTwo addCardtoDeck:[cardDeck objectAtIndex:n]];
-    }
-    
-    // NOTE! The last 2 cards are not used but should be revealed to the players somehow..
-    // they have indices 50 and 51
-
-}
-
--(void) shuffleDeck: (NSMutableArray*) anArray {
-    /* anArray is a NSMutableArray with some objects */
-    NSUInteger count = [anArray count];
-    for (NSUInteger i = 0; i < count; ++i) {
-        int nElements = count - i;
-        int n = (arc4random() % nElements) + i;
-        [anArray exchangeObjectAtIndex:i withObjectAtIndex:n];
-    }
-
-}
-
--(void) printDeck {
-    for (NSInteger c = 0; c < [cardDeck count]; c++){
-        Card *bla = [cardDeck objectAtIndex:c];
-        
-        NSLog(@"value: %d", [bla value]);
-    }
-}
-
--(void) initSprites {
-    CCSpriteBatchNode *spriteBatchNode;
-    [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"cards3.plist"];
-    spriteBatchNode = [CCSpriteBatchNode batchNodeWithFile:@"cards3.png"];
-    
-    /*
-    drawDeckOne = [CCSprite spriteWithFile:@"drawCard.png"];
-    [drawDeckOne setPosition:ccp(15, 260)];
-    [drawDeckOne setScale:0.2f];
-    [self addChild:drawDeckOne z:150];
-     */
 }
 
 // ------------------------ Touches code below ------------------------
@@ -317,10 +218,10 @@ Card* cardDrawn;
                                              [cardCurr value],
                                              [[cardCurr suit] characterAtIndex:0]];
             
-            //CCSprite *exSprite = [CCSprite spriteWithSpriteFrameName:cardFileName];
-            CCSprite *exSprite = [CCSprite spriteWithFile:@"Grad1.png"];
-            NSLog(@"WIDTH is: %f, %f", winSize.width, winSize.height);
-            NSLog(@"bounding box is: %f, %f", [exSprite boundingBox].size.width, [exSprite boundingBox].size.height);
+            CCSprite *exSprite = [CCSprite spriteWithSpriteFrameName:cardFileName];
+            //CCSprite *exSprite = [CCSprite spriteWithFile:@"Grad1.png"];
+            //NSLog(@"WIDTH is: %f, %f", winSize.width, winSize.height);
+            //NSLog(@"bounding box is: %f, %f", [exSprite boundingBox].size.width, [exSprite boundingBox].size.height);
             //[allSprites addObject:exSprite];
             [exSprite setPosition:ccp(tempX,tempY)];
             	//[exSprite setScale:someScale];
@@ -393,42 +294,109 @@ Card* cardDrawn;
 
 }
 
+-(void) initDeck {
+    // get instance of the card array
+    cardDeck = [pokerManager getObjDeck];
+    //[self printDeck];
+    [self shuffleDeck:cardDeck];    // shuffle the deck
+    [self splitDeck:cardDeck];      // split the deck
+}
 
+-(void) splitDeck: (NSMutableArray*) anArray {
+    
+    // keeps track of which line to add cards to
+    // there are 5 lines per lineup (one lineup per player)
+    NSInteger lineIndex = 0;
+    
+    // add the first 5 'cards' of the deck to player 1's (pOne) lineup
+    for (NSInteger n = 0; n < 5; n++){
+        [pOne addCard:[cardDeck objectAtIndex:n] toLine:lineIndex];
+        lineIndex++;
+    }
+    
+    lineIndex = 0;
+    // add the next 5 'cards' of the deck to player 2's (pTwo) lineup
+    for (NSInteger n = 5; n < 10; n++){
+        [pTwo addCard:[cardDeck objectAtIndex:n] toLine:lineIndex];
+        lineIndex++;
+    }
+    
+    // add the next 20 'cards' of the deck to player 1's deck
+    for (NSInteger n = 10; n < 30; n++){
+        [pOne addCardtoDeck:[cardDeck objectAtIndex:n]];
+    }
+    
+    // add the next 20 'cards' of the deck to player 2's deck
+    for (NSInteger n = 30; n < 50; n++){
+        [pTwo addCardtoDeck:[cardDeck objectAtIndex:n]];
+    }
+    
+    // NOTE! The last 2 cards are not used but should be revealed to the players somehow..
+    // they have indices 50 and 51
+    
+}
+
+-(void) shuffleDeck: (NSMutableArray*) anArray {
+    /* anArray is a NSMutableArray with some objects */
+    NSUInteger count = [anArray count];
+    for (NSUInteger i = 0; i < count; ++i) {
+        int nElements = count - i;
+        int n = (arc4random() % nElements) + i;
+        [anArray exchangeObjectAtIndex:i withObjectAtIndex:n];
+    }
+    
+}
+
+-(void) printDeck {
+    NSLog(@"AAAAAAAAAAAAAAAAAAAA");
+    for (NSInteger c = 0; c < [cardDeck count]; c++){
+        Card *bla = [cardDeck objectAtIndex:c];
+        
+        NSLog(@"PRINT ! value: %d", [bla value]);
+    }
+}
+
+-(void) initSprites {
+    CCSpriteBatchNode *spriteBatchNode;
+    [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"cards3.plist"];
+    spriteBatchNode = [CCSpriteBatchNode batchNodeWithFile:@"cards3.png"];
+    
+    // set the scale of the sprites
+    someScale = 0.5f;
+    
+    // init sprite arrays
+    highlightSprites = [[NSMutableArray alloc] initWithCapacity:5];
+    allSprites = [NSMutableArray arrayWithCapacity:5];
+}
+
+-(void) setupGame {
+    winSize = [[CCDirector sharedDirector] winSize];
+    
+    // set game state
+    gameState = @"Player1sTurn";
+    
+    pokerManager = [[pokerlib alloc] init];
+    [pokerManager init_deck];
+    
+    // create player instances
+    pOne = [[Player alloc] init];
+    pTwo = [[Player alloc] init];
+    
+    // init sprites
+    [self initSprites];
+    // init the deck
+    [self initDeck];
+    
+    // clear and update screen
+    [self removeAllChildrenWithCleanup:YES];
+    [self updateDisplay];
+}
 
 -(id) init {
     if (self = [super init]){
-        winSize = [[CCDirector sharedDirector] winSize];
-        
-        gameState = @"Player1sTurn";
-        someScale = 0.5f;
-        [self initSprites];
-        [self initDeck];
-        
-        highlightSprites = [[NSMutableArray alloc] initWithCapacity:5];
-        allSprites = [NSMutableArray arrayWithCapacity:5];
-        //tileMap = [CCTMXTiledMap
-        //           tiledMapWithTMXFile:@"bla.tmx"];
-        
-        //bg = [CCSprite spriteWithFile:@"bg2.jpg"];
-        //[bg setPosition:ccp(winSize.width/2, winSize.height/2)];
-        
-        //ss[self addChild:bg z:5];
-        //[self addChild:tileMap z:2];
-        
-        //[self scheduleUpdate];
+        [self setupGame];                   // init game variables, deck, etc
         [self setIsTouchEnabled:TRUE];      // make layer touch enabled
-        
         [self scheduleUpdate];              // schedule update
-        
-        pokerManager = [[pokerlib alloc] init];
-        [pokerManager init_deck];
-        //NSInteger* theDeck = [pokerManager deck];
-        
-        //NSInteger* pokerDeck = [pokerManager deck];
-        //NSLog(@"!!! value: %d", pokerDeck[0]);
-        //counter = 0;
-        //[self initObjects];
-        
     }
     return self;
 }

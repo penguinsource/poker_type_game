@@ -10,9 +10,11 @@
 #import "cocos2d.h"
 #import "arrays.h"
 #import "poker.h"
+#import "Card.h"
 
 @interface pokerlib : NSObject {
     NSInteger* deck;
+    NSMutableArray* CardObjDeck;
 }
 
 @property (readwrite) NSInteger* deck;
@@ -28,6 +30,6 @@
 
 -(NSInteger) getCardValue: (NSInteger) card_intValue;
 -(NSString*) getCardSuit: (NSInteger) card_intValue;
--(NSMutableArray*) getDeck;
+-(NSMutableArray*) getObjDeck;
 
 @end
