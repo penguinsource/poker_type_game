@@ -12,6 +12,8 @@
 @implementation playLayer
 
 Card* cardDrawn;
+bool isGameOver = false;
+handCompare* comparator;
 
 -(void) dealloc {
     
@@ -25,9 +27,42 @@ Card* cardDrawn;
     }
     [cardDeck release];
     
+    [comparator release];
     [pokerManager release];
     
     [super dealloc];
+}
+
+-(void) autoFillGame {
+    gameState = @"fast";
+    
+    
+    if (![pOne isDeckEmpty]){
+        for (NSInteger i = 0; i < 5; i++){
+            NSLog(@"deck one");
+            [self drawACardPlayer:pOne withDeck: drawDeckOne andState:@"fast"];
+            [pOne addCard: cardDrawn toLine:i];
+            if ([pOne isDeckEmpty]) {
+                isGameOver = true;
+                //gameState = @"deckOneEmpty";
+            }
+        }
+        for (NSInteger i = 0; i < 5; i++){
+            NSLog(@"deck two");
+            [self drawACardPlayer:pTwo withDeck: drawDeckTwo andState:@"fast"];
+            [pTwo addCard: cardDrawn toLine:i];
+            if ([pTwo isDeckEmpty]) {
+                isGameOver = true;
+            //gameState = @"deckOneEmpty";
+            }
+        }
+    }
+    // empty the highlightSprites array; no need to highlight any lines anymore
+    [highlightSprites removeAllObjects];
+    gameState = @"fast";
+    // update the screen
+    [self removeAllChildrenWithCleanup:YES];
+    [self updateDisplay];
 }
 
 // ------------------------ Touches code below ------------------------
@@ -50,19 +85,21 @@ Card* cardDrawn;
     //[pOne addCard:bla toLine:1];
     //[pTwo addCard:bla toLine:2];
     
-
+    // FOR TESTING !
+    [self autoFillGame];
     
     if (gameState == @"Player1sTurn"){        
         // check if the user (player one) clicked on the deck
         if (CGRectContainsPoint([drawDeckOne boundingBox], pointTouched)){
             // check if there are any cards left to be drawn in the deck
-            if ([pOne isDeckEmpty]){
-                gameState = @"deckOneEmpty";
-                NSLog(@"Empty Deck One");
-            }else{
+            //if ([pOne isDeckEmpty]){
+            //    gameState = @"deckOneEmpty";
+            //    isGameOver = true;
+            //    NSLog(@"Empty Deck One");
+            //}else{
                 // if there are.. draw a card
                 [self drawACardPlayer:pOne withDeck: drawDeckOne andState:@"oneSelecting"];
-            }
+            //}
         }
     } else if (gameState == @"Player2sTurn"){
         // check if the user (player two) clicked on the deck
@@ -96,6 +133,11 @@ Card* cardDrawn;
                 [self removeAllChildrenWithCleanup:YES];
                 [self updateDisplay];
                 
+                if ([pOne isDeckEmpty]) {
+                    isGameOver = true;
+                    gameState = @"deckOneEmpty";
+                }
+                
             }
         }
         // if the user clicks somewhere else on the screen.. ignore it..
@@ -128,6 +170,27 @@ Card* cardDrawn;
     } else if (gameState == @"deckTwoEmpty"){
         NSLog(@"Empty Deck Two");
     }
+    
+    // if all the cards have been drawn.. the game is over; time to compare the hands of each line
+    if (isGameOver){
+        NSLog(@"game is over !");
+        // 1 for player one winning; 2 for player two winning
+        [comparator compareHands:pOne :pTwo :pokerManager];
+        
+        /*
+        NSLog(@"first line:");
+        //for (NSInteger i = 0; i < 5; i++){
+        Card* one = [[[pOne getLineup] objectAtIndex:0] objectAtIndex:0];
+        Card* two = [[[pOne getLineup] objectAtIndex:0] objectAtIndex:1];
+        Card* three = [[[pOne getLineup] objectAtIndex:0] objectAtIndex:2];
+        Card* four = [[[pOne getLineup] objectAtIndex:0] objectAtIndex:3];
+        Card* five = [[[pOne getLineup] objectAtIndex:0] objectAtIndex:4];
+        
+        short ans = [pokerManager eval_5cards:[one codedValue] :[two codedValue] :[three codedValue] :[four codedValue] :[five codedValue] ];
+        NSLog(@"line 1 is: %d", [pokerManager hand_rank:ans]);
+        //}
+         */
+    }
 
 }
 
@@ -155,7 +218,7 @@ Card* cardDrawn;
 - (void)ccTouchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     
-}
+}	
 // ------------------------ Touches code above ------------------------
 
 // ------------------------ Display code below ------------------------
@@ -224,7 +287,7 @@ Card* cardDrawn;
             //NSLog(@"bounding box is: %f, %f", [exSprite boundingBox].size.width, [exSprite boundingBox].size.height);
             //[allSprites addObject:exSprite];
             [exSprite setPosition:ccp(tempX,tempY)];
-            	//[exSprite setScale:someScale];
+            [exSprite setScale:someScale];
             [self addChild:exSprite z:150];
             
             // save the position and line where the card / card's sprite is displayed.
@@ -294,14 +357,6 @@ Card* cardDrawn;
 
 }
 
--(void) initDeck {
-    // get instance of the card array
-    cardDeck = [pokerManager getObjDeck];
-    //[self printDeck];
-    [self shuffleDeck:cardDeck];    // shuffle the deck
-    [self splitDeck:cardDeck];      // split the deck
-}
-
 -(void) splitDeck: (NSMutableArray*) anArray {
     
     // keeps track of which line to add cards to
@@ -348,7 +403,7 @@ Card* cardDrawn;
 }
 
 -(void) printDeck {
-    NSLog(@"AAAAAAAAAAAAAAAAAAAA");
+    //NSLog(@"Printing deck.. ");
     for (NSInteger c = 0; c < [cardDeck count]; c++){
         Card *bla = [cardDeck objectAtIndex:c];
         
@@ -369,6 +424,14 @@ Card* cardDrawn;
     allSprites = [NSMutableArray arrayWithCapacity:5];
 }
 
+-(void) initDeck {
+    // get instance of the card array
+    cardDeck = [pokerManager getObjDeck];
+    //[self printDeck];
+    [self shuffleDeck:cardDeck];    // shuffle the deck
+    [self splitDeck:cardDeck];      // split the deck
+}
+
 -(void) setupGame {
     winSize = [[CCDirector sharedDirector] winSize];
     
@@ -378,15 +441,18 @@ Card* cardDrawn;
     pokerManager = [[pokerlib alloc] init];
     [pokerManager init_deck];
     
+    // initiate a handCompare object
+    comparator = [[handCompare alloc] init];
+    
     // create player instances
     pOne = [[Player alloc] init];
     pTwo = [[Player alloc] init];
     
-    // init sprites
-    [self initSprites];
     // init the deck
     [self initDeck];
-    
+    // init sprites
+    [self initSprites];
+
     // clear and update screen
     [self removeAllChildrenWithCleanup:YES];
     [self updateDisplay];

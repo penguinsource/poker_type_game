@@ -11,6 +11,7 @@
 #import "Card.h"
 #import "Player.h"
 #import "pokerlib.h"
+#import "handCompare.h"
 
 /*
  
@@ -33,6 +34,7 @@
     
     NSMutableArray *highlightSprites;
     
+    handCompare* comparator;
     pokerlib *pokerManager;
 }
 

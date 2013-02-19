@@ -47,6 +47,7 @@
 }
 
 -(BOOL) isDeckEmpty {
+    //NSLog(@"deck count is %d", [deck count]);
     if ([deck count] < 1)
         return true;
     return false;
