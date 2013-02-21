@@ -61,7 +61,6 @@ Player* pOne, *pTwo;
 }
 
 -(NSInteger) handleTieExcep: (NSInteger) rankOfBoth :(NSInteger) lineArg {
-
     
     if (rankOfBoth == 9){   // high card
         [self checkHighCard:lineArg];
@@ -73,7 +72,7 @@ Player* pOne, *pTwo;
         [self pairTieException:lineArg pairType:2];
     } else if (rankOfBoth == 6) {
         NSLog(@"Three of a kind Tie");
-        [self threeOfAKindException:lineArg];
+        [self threeOfAKindException:lineArg fullHouse:false];
     } else if (rankOfBoth == 5) {
         // in the case of a straight.. check the highest card !
         NSLog(@"Straight Tie");
@@ -81,11 +80,15 @@ Player* pOne, *pTwo;
     } else if (rankOfBoth == 4) {
         [self checkHighCard:lineArg];
     } else if (rankOfBoth == 3) {
-
+        NSLog(@"Full House Tie");
+        [self threeOfAKindException:lineArg fullHouse:true];
     } else if (rankOfBoth == 2) {
-        //
+        NSLog(@"Four of a Kind Tie");
+        [self fourOfAKindException:lineArg];
     } else if (rankOfBoth == 1) {
-        //
+        NSLog(@"Straight Flush Tie");
+        // ************************************
+        // check the high card
     }
     
     return 0;
@@ -117,6 +120,7 @@ Player* pOne, *pTwo;
         } else if (cardPlayer1 < cardPlayer2) {
             pTwoScore++;
         } else{
+            // *****************************
             // ANOTHER TIE.. go by SUIT
         }
     }
@@ -142,6 +146,7 @@ Player* pOne, *pTwo;
         } else if ((card2Player2 > cardPlayer1) && (card2Player2 > card2Player1)) {
             pTwoScore++;
         } else {          // both pairs of each player are EQUAL.. so compare the sidecards of each line
+            // *****************************
             // .. comparing sidecards.. 
         }
         
@@ -174,9 +179,10 @@ Player* pOne, *pTwo;
 }
 
 // --------------------------------------------------------------------------------------
-/* --------- exception handling ties between three-of-a-kind hands BELOW ---------    */
+/* --------- exception handling ties between three-of-a-kind hands AND full-house hands BELOW ---------    */
 
--(void) threeOfAKindException: (NSInteger) lineArg {
+// if bool fullHArg is true, then this is not a three of a kind tie anymore, but a full house tie
+-(void) threeOfAKindException: (NSInteger) lineArg fullHouse: (bool) fullHArg {
     // get each players' lineup
     NSMutableArray* p1Lineup = [pOne getLineup];
     NSMutableArray* p2Lineup = [pTwo getLineup];
@@ -193,6 +199,8 @@ Player* pOne, *pTwo;
     } else if (cardPlayer2 > cardPlayer1){
         NSLog(@"3ofAKind, p2 wins ! p1: %d, p2: %d", cardPlayer1, cardPlayer2);
         pTwoScore++;
+    } else if (fullHArg){       // ONLY if this is a full house case, not a three of a kind exception
+        // the other 2 cards are a pair.. the highest pair wins *****************************
     } else {            // cardPlayer1 and cardPlayer2 are equal.. so check the other cards (high cards)
         NSInteger highCardP1 = [self getHighCard:arrayp1 exceptCard:cardPlayer1];
         NSInteger highCardP2 = [self getHighCard:arrayp2 exceptCard:cardPlayer2];
@@ -231,6 +239,59 @@ Player* pOne, *pTwo;
     }
     return card1;
 }
+
+// --------------------------------------------------------------------------------------
+/* --------- exception handling ties between four of a kind hands BELOW ---------    */
+
+-(void) fourOfAKindException: (NSInteger) lineArg {
+    // get each players' lineup
+    NSMutableArray* p1Lineup = [pOne getLineup];
+    NSMutableArray* p2Lineup = [pTwo getLineup];
+    // get the 2 lines that are to be compared
+    NSMutableArray* arrayp1 = [p1Lineup objectAtIndex:lineArg]; // player 1's line
+    NSMutableArray* arrayp2 = [p2Lineup objectAtIndex:lineArg]; // player 2's line
+    
+    NSInteger cardPlayer1 = [self findSameCard4TimesInList:arrayp1];
+    NSInteger cardPlayer2 = [self findSameCard4TimesInList:arrayp2];
+    
+    if (cardPlayer1 > cardPlayer2){
+        NSLog(@"4ofAKind, p1 wins ! p1: %d, p2: %d", cardPlayer1, cardPlayer2);
+        pOneScore++;
+    } else if (cardPlayer2 > cardPlayer1){
+        NSLog(@"4ofAKind, p2 wins ! p1: %d, p2: %d", cardPlayer1, cardPlayer2);
+        pTwoScore++;
+    } else {
+        // ********************************************
+        // check the remaining card.. highest card wins
+    }
+    
+}
+
+//finds the integer/card that appears 3 times in the list
+-(NSInteger) findSameCard4TimesInList: (NSMutableArray*) list {
+    NSInteger card1;
+    NSInteger count = 0;
+    for (NSInteger i = 0; i < [list count]; i++){
+        Card* temp1 = [list objectAtIndex:i];
+        
+        for (NSInteger j = 0; j < [list count]; j++){
+            if (i != j){    // don't check the same indices (same value, obviously)
+                Card* temp2 = [list objectAtIndex:j];
+                if ([temp1 value] == [temp2 value]){
+                    count++;
+                }
+                if (count == 3){
+                    card1 = [temp1 value];
+                    break;
+                }
+            }
+        }
+    }
+    return card1;
+}
+
+// --------------------------------------------------------------------------------------
+/* ---------               high card tie exception check BELOW              ---------    */
 
 // returns the value of the card with the max value in a mutable array.
 -(NSInteger) getHighCard: (NSMutableArray*) lineArrayArg exceptCard: (NSInteger) cardValue {
