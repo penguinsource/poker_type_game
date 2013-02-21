@@ -85,33 +85,18 @@ double  drand48();
     for ( i = 0; i < 4; i++, suit >>= 1 ){
         for ( j = 0; j < 13; j++, n++ ) {
             deck[n] = primes[j] | (j << 8) | suit | (1 << (16+j));
-            //NSLog(@"card: %d, %d, SUIT: %d, primes: %d, %d", i, deck[n], suit, primes[j], j);
-            //NSLog(@"index %d, %d, %d, %d, %d", n, primes[j], j, suit, deck[n]);
         }
     }
     
     srand ( (unsigned int) time (0) );
-    [self shuffle_deckTwo:deck :52];
+    //[self shuffle_deckTwo:deck :52];
     NSInteger hand[5];
     for (NSInteger i = 0; i < 5; i++){
         hand[i] = deck[i];
     }
     short ii = [self eval_5hand:hand];
-    NSInteger jj = [self hand_rank:ii];
-    //NSLog(@"ii is %hd, jj is %d", ii, jj);
-    [self print_hand:hand :5];
     
-    // initiate the 'CardObjDeck' (the array with each card being a Card object)
-    // [self init_deck_CardObjects];
-    
-    //[self cardValue: deck[0]];
-    //[self getCardSuit:deck[0]];
-    //[self getCardSuit:deck[12]];
-    //[self getCardSuit:deck[51]];
-    //[self cardValue: deck[1]];
-    //[self cardValue: deck[2]];
-    //NSLog(@"IT IS: %d", [self find_card:0 :0x4000 :deck]);
-
+    // [self print_hand:hand :5];
 }
 
 //  This routine will search a deck for a specific card
@@ -237,7 +222,7 @@ double  drand48();
 
 // returns the cards value (1,2,3,4..13)
 // argument: integer value of the card held in the 'deck'
--(NSInteger) getCardValue: (NSInteger) card_intValue {
+-(NSInteger) getCardValue: (NSInteger) card_intValue :(NSInteger) mode {
     NSInteger check = 63;
     NSInteger diff = check & card_intValue;
     NSInteger cardValue = -1;
@@ -268,7 +253,11 @@ double  drand48();
     } else if (diff == 37){
         cardValue = 13;
     } else if (diff == 41){
-        cardValue = 1;
+        cardValue = 1;              // CHANGED IT FROM 1 to 14.. if any problems arise.. change it back.
+        
+        if (mode == 1){             // TEMPORARY FIX. sprite needs
+            cardValue = 14;
+        }
     }
     
     //NSLog(@"Card Value: %d", diff);
@@ -301,7 +290,7 @@ double  drand48();
     CardObjDeck = [[NSMutableArray alloc] initWithCapacity:52];
     for (NSInteger i = 0; i < 52; i++){
         // [deckArray addObject:[NSNumber numberWithInt:deck[i]]];   // adds an NSNumber to the deckArray
-        NSInteger ccardValue = [self getCardValue:deck[i]];
+        NSInteger ccardValue = [self getCardValue:deck[i] :0];
         NSString* ccardSuit = [self getCardSuit:deck[i]];
         NSInteger suitToSet = -1;
         if ([ccardSuit characterAtIndex:0] == 's') {
@@ -316,6 +305,7 @@ double  drand48();
             suitToSet = 5;
         }
         
+        // Init a new card and add it to a mutable array
         Card *newcard = [[Card alloc] init];
         [newcard setSuit:suitToSet];
         [newcard setCodedValue:deck[i]];

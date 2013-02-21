@@ -28,7 +28,7 @@
 -(short) eval_5cards: (NSInteger)c1 :(NSInteger)c2 :(NSInteger)c3 :(NSInteger)c4 :(NSInteger) c5;
 -(short) eval_5hand: (NSInteger*) hand;
 
--(NSInteger) getCardValue: (NSInteger) card_intValue;
+-(NSInteger) getCardValue: (NSInteger) card_intValue :(NSInteger) mode;
 -(NSString*) getCardSuit: (NSInteger) card_intValue;
 -(NSMutableArray*) getObjDeck;
 

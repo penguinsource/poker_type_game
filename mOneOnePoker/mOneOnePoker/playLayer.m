@@ -33,6 +33,10 @@ handCompare* comparator;
     [super dealloc];
 }
 
+-(void) manualFillGame {
+    
+}
+
 -(void) autoFillGame {
     gameState = @"fast";
     
@@ -71,8 +75,7 @@ handCompare* comparator;
     
 }
 
-- (void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
+- (void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     
 	//NSLog(@"Touches began!");
     NSArray *touchArray = [touches allObjects];
@@ -86,8 +89,9 @@ handCompare* comparator;
     //[pTwo addCard:bla toLine:2];
     
     // FOR TESTING !
-    [self autoFillGame];
-    
+    //[self autoFillGame];
+    // [self manualFillGame];
+        
     if (gameState == @"Player1sTurn"){        
         // check if the user (player one) clicked on the deck
         if (CGRectContainsPoint([drawDeckOne boundingBox], pointTouched)){
@@ -105,13 +109,13 @@ handCompare* comparator;
         // check if the user (player two) clicked on the deck
         if (CGRectContainsPoint([drawDeckTwo boundingBox], pointTouched)){
             // check if there are any cards left to be drawn in the deck
-            if ([pTwo isDeckEmpty]){
+            /*if ([pTwo isDeckEmpty]){
                 gameState = @"deckTwoEmpty";
                 NSLog(@"Empty Deck Two");
-            }else{
+            }else{*/
                 // if there are.. draw a card
                 [self drawACardPlayer:pTwo withDeck: drawDeckTwo andState:@"twoSelecting"];
-            }
+            //}
         }
     } else if (gameState == @"oneSelecting"){
         // check if any of the highlighted sprites have been selected/touched
@@ -127,16 +131,18 @@ handCompare* comparator;
                 [highlightSprites removeAllObjects];
                 
                 // change of player turn
-                gameState = @"Player1sTurn";
+                gameState = @"Player2sTurn";
+                
+                // ...
+                if ([pOne isDeckEmpty]){
+                    gameState = @"Player2sTurn";     
+                }
                 
                 // update the screen
                 [self removeAllChildrenWithCleanup:YES];
                 [self updateDisplay];
                 
-                if ([pOne isDeckEmpty]) {
-                    isGameOver = true;
-                    gameState = @"deckOneEmpty";
-                }
+
                 
             }
         }
@@ -157,6 +163,11 @@ handCompare* comparator;
                 // change of player turn
                 gameState = @"Player1sTurn";
                 
+                if ([pTwo isDeckEmpty]){
+                    gameState = @"fast";
+                    isGameOver = true;
+                }
+                
                 // update the screen
                 [self removeAllChildrenWithCleanup:YES];
                 [self updateDisplay];
@@ -174,22 +185,16 @@ handCompare* comparator;
     // if all the cards have been drawn.. the game is over; time to compare the hands of each line
     if (isGameOver){
         NSLog(@"game is over !");
-        // 1 for player one winning; 2 for player two winning
-        [comparator compareHands:pOne :pTwo :pokerManager];
+        // 1 for player one winning; 2 for player two winning; 0 for tie
+        NSInteger gameResult = [comparator compareHands:pOne :pTwo :pokerManager];
         
-        /*
-        NSLog(@"first line:");
-        //for (NSInteger i = 0; i < 5; i++){
-        Card* one = [[[pOne getLineup] objectAtIndex:0] objectAtIndex:0];
-        Card* two = [[[pOne getLineup] objectAtIndex:0] objectAtIndex:1];
-        Card* three = [[[pOne getLineup] objectAtIndex:0] objectAtIndex:2];
-        Card* four = [[[pOne getLineup] objectAtIndex:0] objectAtIndex:3];
-        Card* five = [[[pOne getLineup] objectAtIndex:0] objectAtIndex:4];
-        
-        short ans = [pokerManager eval_5cards:[one codedValue] :[two codedValue] :[three codedValue] :[four codedValue] :[five codedValue] ];
-        NSLog(@"line 1 is: %d", [pokerManager hand_rank:ans]);
-        //}
-         */
+        if (gameResult == 0){
+            NSLog(@"GAME OVER: Tie !");
+        } else if (gameResult == 1){
+            //NSLog(@"GAME OVER: Player one wins ! p1: %d, p2: %d", [pokerManager pOneScore], [pokerManager pTwoScore]);
+        } else if (gameResult == 2){
+           // NSLog(@"GAME OVER: Player two wins ! p1: %d, p2: %d", [pokerManager pOneScore], [pokerManager pTwoScore]);
+        }
     }
 
 }
@@ -406,7 +411,6 @@ handCompare* comparator;
     //NSLog(@"Printing deck.. ");
     for (NSInteger c = 0; c < [cardDeck count]; c++){
         Card *bla = [cardDeck objectAtIndex:c];
-        
         NSLog(@"PRINT ! value: %d", [bla value]);
     }
 }
@@ -428,7 +432,7 @@ handCompare* comparator;
     // get instance of the card array
     cardDeck = [pokerManager getObjDeck];
     //[self printDeck];
-    [self shuffleDeck:cardDeck];    // shuffle the deck
+    // [self shuffleDeck:cardDeck];    // shuffle the deck
     [self splitDeck:cardDeck];      // split the deck
 }
 

@@ -77,10 +77,6 @@
     return cardDrawn;
 }
 
-/*-(NSString) parseCurrentLineup {
-    
-}*/
-
 -(void) printDeck {
     for (NSInteger i = 0; i < [deck count]; i++){
         Card* card = [deck objectAtIndex:i];
