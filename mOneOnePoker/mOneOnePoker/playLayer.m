@@ -432,7 +432,7 @@ handCompare* comparator;
     // get instance of the card array
     cardDeck = [pokerManager getObjDeck];
     //[self printDeck];
-    // [self shuffleDeck:cardDeck];    // shuffle the deck
+    [self shuffleDeck:cardDeck];    // shuffle the deck
     [self splitDeck:cardDeck];      // split the deck
 }
 

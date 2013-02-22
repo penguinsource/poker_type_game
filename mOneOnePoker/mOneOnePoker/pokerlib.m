@@ -222,7 +222,7 @@ double  drand48();
 
 // returns the cards value (1,2,3,4..13)
 // argument: integer value of the card held in the 'deck'
--(NSInteger) getCardValue: (NSInteger) card_intValue :(NSInteger) mode {
+-(NSInteger) getCardValue: (NSInteger) card_intValue {
     NSInteger check = 63;
     NSInteger diff = check & card_intValue;
     NSInteger cardValue = -1;
@@ -253,11 +253,7 @@ double  drand48();
     } else if (diff == 37){
         cardValue = 13;
     } else if (diff == 41){
-        cardValue = 1;              // CHANGED IT FROM 1 to 14.. if any problems arise.. change it back.
-        
-        if (mode == 1){             // TEMPORARY FIX. sprite needs
-            cardValue = 14;
-        }
+        cardValue = 14;              // CHANGED IT FROM 1 to 14.. if any problems arise.. change it back.
     }
     
     //NSLog(@"Card Value: %d", diff);
@@ -290,7 +286,7 @@ double  drand48();
     CardObjDeck = [[NSMutableArray alloc] initWithCapacity:52];
     for (NSInteger i = 0; i < 52; i++){
         // [deckArray addObject:[NSNumber numberWithInt:deck[i]]];   // adds an NSNumber to the deckArray
-        NSInteger ccardValue = [self getCardValue:deck[i] :0];
+        NSInteger ccardValue = [self getCardValue:deck[i]];
         NSString* ccardSuit = [self getCardSuit:deck[i]];
         NSInteger suitToSet = -1;
         if ([ccardSuit characterAtIndex:0] == 's') {
