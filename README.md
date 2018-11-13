@@ -1,7 +1,29 @@
-poker_type_game
+Poker Type Game
 ===============
 
-*in progress*
+Structure:
 
- - functionality for hot-seat is complete; gui needs work.
- - 1v1 poker-type game coming soon !
+- Single player Poker game for iOS
+- Main logic classes are written in mOneOnePoker directory
+
+
+Features:
+
+- Shuffles and hands out cards.
+- Completes hand comparisons.
+
+
+Issues:
+
+- Gui needs improvement.
+
+
+Developer Notes:
+
+- Functionality for hot-seat is complete.
+
+
+Author:
+
+Mihai Oprescu
+
